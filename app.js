@@ -1,12 +1,25 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const authRoutes = require('./routes/authRoutes');
-const userRoutes = require('./routes/userRoutes');
+const Routes = require('./routes/routes');
+const cors = require('cors');
 require('dotenv').config();
+
 
 const app = express();
 
+// CORS Configuration
+const corsOptions = {
+  origin: ['http://localhost:3000'], // Ganti dengan alamat frontend Anda jika berbeda
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],  // Pastikan header ini termasuk
+  credentials: true,  // Jika menggunakan cookies, pastikan credentials diizinkan
+};
+
+// Gunakan CORS middleware
+app.use(cors(corsOptions));
+
 app.use(bodyParser.json());
+
 
 // Route untuk endpoint root (/)
 app.get('/', (req, res) => {
@@ -14,8 +27,7 @@ app.get('/', (req, res) => {
 });
 
 // Gunakan routes untuk autentikasi dan user
-app.use('/auth', authRoutes);
-app.use('/user', userRoutes);
+app.use('/api', Routes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
